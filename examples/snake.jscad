@@ -1,7 +1,10 @@
 function body_segment(_o) {
   var circles = [];
   for (var i=-1; i<2; i++) {
-    circles.push(circle(0.5*_o.height*(1-Math.abs(i*0.5))).center([false,true]).translate([0,_o.height*i/2,0]));
+    circles.push(circle(0.5*_o.height*(1-Math.abs(i*0.5)))
+                 .center([false,true])
+                 .translate([0,_o.height*i/2,0])
+                );
   }
   if (!_o.flat) {
     shape = linear_extrude({height:_o.t_rib},hull(circles));
@@ -55,15 +58,23 @@ function snake(_o) {
   return union(shapes);
 }
 
-function main() {
+function getParameterDefinitions() {
+  return [
+    { name: 'segments', type: 'float', initial: 10, caption: "Number of segments:" },
+    { name: 'spine_thickness', type: 'float', initial: 0.8, caption: "Spine Thickness:" },
+    { name: 'max_height', type: 'float', initial: 11, caption: "Maximum Height:" },
+  ];
+}
+
+function main(params) {
   _o = {
     separation: 2,
     t_rib: 2.5,
-    t_spine: 0.8,
-    segments: 40,
-    max_height: 11,
+    t_spine: params.spine_thickness,
+    segments: params.segments,
+    max_height: params.max_height,
     tail_segments: 0,
-    tail_skew: 34
+    tail_skew: Math.floor(0.75*params.segments)
   };
   var start = new Date().valueOf();
   x = union([
