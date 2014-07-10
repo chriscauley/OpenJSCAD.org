@@ -74,6 +74,7 @@ $(document).ready(function() {
       $("#viewer").height($(window).height());
    });
    setTimeout( function(){$('#menu').css('left','-280px');},3000); // -- hide slide-menu after 3secs
+   setTimeout( function(){$('#editorWrapper').css('right','-500px');},3000); // -- hide slide-editor after 3secs
 
    $('#menu').mouseleave(function() {
       $('#examples').css('height',0); $('#examples').hide(); 
@@ -178,8 +179,10 @@ Get your copy/clone/fork from <a href="https://github.com/Spiritdude/OpenJSCAD.o
 <a class=okButton href='#' onclick="$('#about').hide(); return false;"> OK </a>
 </div>
 
-<div id="editor">// -- OpenJSCAD.org logo
-
+<div id="editorWrapper">
+  <img id="editorHandle" src="imgs/menuHandleVL.png" style="top: 45%;">
+  <div id="editor">
+// -- OpenJSCAD.org logo
 function main() {
    return union(
       difference(
@@ -192,6 +195,7 @@ function main() {
       )
    ).translate([0,0,1.5]).scale(10);
 }
+  </div>
 </div>
 
 <script>

@@ -30,7 +30,7 @@ a:visited {
 }
 
 #editor { 
-   width: 40%;
+   width: 100%;
    top: 0px;
    bottom: 0px;
    /* height: 100%;    note: newer ace expects height */
@@ -149,6 +149,28 @@ canvas {
    top: 45%;
    position: absolute;
    z-index: 6;
+}
+
+#editorWrapper {
+  height: 100%;
+  position: absolute;
+  right: 0;
+  width: 500px;
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+}
+
+#editorWrapper:hover, #editorWrapper:focus ~ #editorHandle:hover, #editorHandle:focus {
+  right: 0 !important;  /* slide out */
+}
+
+#editorHandle {
+   left: -25px;
+   top: 45%;
+   position: absolute;
+   z-index: 6;
+   transform: rotate(180deg);
+   -webkit-transform: rotate(180deg);
 }
 
 #menu nav {
