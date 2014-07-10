@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/node
 
 // OpenJSCAD.org CLI interface, written by Rene K. Mueller <spiritdude@gmail.com>
 // License: GPLv2
@@ -38,18 +38,13 @@ gMainParam = {};
 var fs = require('fs');
 var vm = require('vm');
 
-//include('./openscad.js');         // later
-
-global.lib = '/usr/local/lib/openjscad/';             // for now hard-coded
-global.nodeModules = '/usr/local/lib/node_modules/';  // for now hard-coded too
+include('./openscad.js');         // later
 
 //if (!fs.existsSync(global.lib))           // requires node 0.10.1 
 //   global.lib = './';
-if(!fs.statSync(global.lib).isDirectory())  // same but works with 0.6.1+
-   global.lib = './';
 
-var CSG = require(lib+'./csg.js').CSG;
-var CAG = require(lib+'./csg.js').CAG;  // any way to include CSG & CAG in once?
+var CSG = require('./csg.js').CSG;
+var CAG = require('./csg.js').CAG;  // any way to include CSG & CAG in once?
 
 //require(lib+'./OpenJsCad/openjscad.js'); // make it a nodejs module (later)
 
@@ -120,7 +115,7 @@ if(!outFormat&&!outf) {
 
 //console.log("reading "+inf);
 var src = fs.readFileSync(inf,inf.match(/\.stl$/i)?"binary":"UTF8");
-var scad = fs.readFileSync(lib+'./openscad.js');
+var scad = fs.readFileSync('./openscad.js');
 var inc = [];
 
 //var csg = sphere(1);          // -- basic test
@@ -158,14 +153,14 @@ if(inFormat=='scad') {
    
 } else if(inFormat=='stl') {
    //console.log("converting "+inf+" to jscad");
-   var openscad = require(lib+'openscad.js');
+   var openscad = require('openscad.js');
    src = openscad.parseSTL(src,inf);
    //src = "// "+outf+" created by openjscad-"+version+" from "+inf+"\n\n"+src;
    
 } else if(inFormat=='amf') {
    //console.log("converting "+inf+" to jscad");
    // $ = require(global.nodeModules+'jquery');   // needed for AMF (XML) parsing
-   // var openscad = require(lib+'openscad.js');
+   // var openscad = require('openscad.js');
    // src = openscad.parseAMF(src,inf);
    src = parseAMF(src,inf);
    //src = "// "+outf+" created by openjscad-"+version+" from "+inf+"\n\n"+src;
