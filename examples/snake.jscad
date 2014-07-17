@@ -1,9 +1,9 @@
 function body_segment(_o) {
   var circles = [];
   for (var i=-1; i<2; i++) {
-    circles.push(circle(0.5*_o.height*(1-Math.abs(i*0.5)))
+    circles.push(circle(0.5*_o.max_height*(1-Math.abs(i*0.5)))
                  .center([false,true])
-                 .translate([0,_o.height*i/2,0])
+                 .translate([0,_o.max_height*i/2,0])
                 );
   }
   if (!_o.flat) {
@@ -19,11 +19,13 @@ function snake(_o) {
   var min_height = Infinity;
   var max_height = 0;
   var last_height = Infinity;
+  var seg = body_segment(_o);
   for (var i=_o.tail_skew-_o.segments; i<_o.tail_skew; i++) {
-    _o.height = _o.max_height*(1-Math.abs(i/40));
+    scale = 1-Math.abs(i/40);
+    _o.height = _o.max_height*scale
     _o.spine_height = Math.min(last_height,_o.height);
     x0 = d*i;
-    shapes.push(body_segment(_o).translate([x0,0,0]));
+    shapes.push(seg.scale(scale).translate([x0,0,0]));
     min_height = Math.min(min_height,_o.height);
     max_height = Math.max(max_height,_o.height);
     last_height = _o.height;
