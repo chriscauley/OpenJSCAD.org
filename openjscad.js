@@ -1506,7 +1506,7 @@ OpenJsCad.Processor.prototype = {
       {
         type = paramdef.type;
       }
-      if( (type !== "text") && (type !== "int") && (type !== "float") && (type !== "choice") )
+      if( (type !== "text") && (type !== "int") && (type !== "float") && (type !== "choice") && (type !== "custom"))
       {
         throw new Error(errorprefix + "Unknown parameter type '"+type+"'");
       }
@@ -1582,6 +1582,9 @@ OpenJsCad.Processor.prototype = {
         {
           control.selectedIndex = selectedindex;
         }        
+      }
+      else if (type == "custom") {
+        window[paramdef.constructor];
       }
       // implementing instantUpdate
       control.onchange = function() { 

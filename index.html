@@ -54,6 +54,7 @@ Todo:
 <script src="openjscad.js"></script>
 <script src="openscad.js"></script>
 <script src="underscore.js"></script>
+<script src="canvas.js"></script>
 <script src="openscad-openjscad-translator.js"></script>
 <script lang=JavaScript>
 var version = '0.017 (2014/02/14)';
@@ -201,6 +202,7 @@ function main() {
 <script>
 var ex = [ 
 { file:'hexarmor.jscad', title: 'Hex Armor' },
+{ file:'hivecase.jscad', title: 'Hive Case' },
 { file:'links.jscad', title: 'Links' },
 { file:'snake.jscad', title: 'Oh it\'s a snake!!' },
 { file:'clippy.jscad', title: 'Clippy mah nippy' },
@@ -523,7 +525,7 @@ function onload() {
       } else if(document.URL.match(/#(examples\/\S+)$/)) {    // local example, e.g. http://openjscad.org/#examples/example001.jscad
          var fn = RegExp.$1;
          fetchExample(fn);
-         document.location = document.URL.replace(/#.*$/,'#');
+         //document.location = document.URL.replace(/#.*$/,'#');
          
       } else {
          fetchExample('examples/'+ex[0].file);

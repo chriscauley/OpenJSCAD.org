@@ -1,15 +1,15 @@
 _d = {
-  hex: {fn:6,h:4,r:6, rotx:45},
-  tri: {fno:3,ri:3,ro:12,rotx:60},
-  gap: 0.6
+  hex: {fn:6,rotx:45},
+  tri: {fno:3,rotx:60,roty:45},
 }
 function getParameterDefinitions() {
   return [
-    { name: 'hex_r', type: 'float', initial: 6, caption: "Hex Radius" },
-    { name: 'hex_h', type: 'float', initial: 4, caption: "Hex Thickness" },
+    { name: 'hex_r', type: 'float', initial: 7, caption: "Hex Radius" },
+    { name: 'hex_h', type: 'float', initial: 5, caption: "Hex Thickness" },
     { name: 'tri_ro', type: 'float', initial: 12, caption: "Triangle Outer Radius" },
-    { name: 'tri_ri', type: 'float', initial: 3, caption: "Triangle Inner Radius" },
+    { name: 'tri_ri', type: 'float', initial: 3.5, caption: "Triangle Inner Radius" },
     { name: 'gap', type: 'float', initial: 0.6, caption: "Gap" },
+    //{ name: 'pattern', type: 'custom', constructor: 'newCanvas', caption: "pattern"}
   ];
 }
 function torus2(p) {
@@ -34,15 +34,19 @@ function torus2(p) {
 function get_unit_cell(_d) {
   var tri = torus2(_d.tri);
   var r_total = 9;
-  var hex = linear_extrude({height:_d.hex.h},circle(_d.hex)).rotateZ(30).center(true).translate([-r_total,0,0]);
+  //i_hex = linear_extrude({height:_d.hex.h},circle({r:5,fn:6})).rotateZ(30).center(true).translate([-r_total,0,0]);
+  hex = linear_extrude({height:_d.hex.h},circle(_d.hex)).rotateZ(30).center(true).translate([-r_total,0,0]);
+  //hex = difference(hex,i_hex);
   _d.otri = {fno:3,ri:_d.tri.ri+_d.gap,ro:_d.tri.ro,rotx:_d.tri.rotx};
   var otri = torus2(_d.otri);
+  var osq = cube([_d.otri.ri,_d.hex.r*2,_d.otri.ri/2]).center(true).translate([-r_total/3*2,0,-_d.otri.ri/4]);
   half_hex = difference(
     hex,
-    cube(2*r_total).center(true).translate([-r_total*2,0]),
-    otri
+    cube(2*r_total).center(true).translate([-r_total*2,0,0]),
+    otri,
+    osq
   )
-  var cylinder = linear_extrude({height:_d.hex.h/2},circle(_d.tri.ri/2).center(true))
+  var cylinder = linear_extrude({height:_d.hex.h/2},circle(_d.tri.ri/3).center(true))
     .translate([_d.tri.ro,0,-_d.hex.h/2]);
   var unit_cell = union([
     tri,
@@ -61,9 +65,14 @@ function main(params) {
   _d.tri.ri = params.tri_ri;
   _d.tri.ro = params.tri_ro;
   _d.gap = params.gap;
-  var unit_cell = get_unit_cell(_d);
-  var dist = _d.tri.ro+_d.hex.r;
-  var _uc = unit_cell.rotateZ(60).translate([-dist,0,0]);
+  var unit_cell = get_unit_cell(_d).translate([0,0,_d.hex.h/2]);
+  var dist = _d.tri.ro+_d.hex.r-2;
+  var _uc = unit_cell.rotateZ(60).translate([-dist,0,]);
+  /*return difference(
+    unit_cell,
+    cube(100).center(true).translate([0,50,0])
+  )*/
+      
   return unit_cell;
   unit_cell2 = union([
     unit_cell,
@@ -71,6 +80,7 @@ function main(params) {
     _uc.rotateZ(120),
     _uc.rotateZ(-120),
   ])
+  return unit_cell2;
   _uc2 = unit_cell2.rotateZ(60).translate([2*dist,0,0]);
   return [
     unit_cell2,

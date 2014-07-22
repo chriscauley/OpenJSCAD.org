@@ -362,3 +362,13 @@ canvas {
 .shift-horizontal .arrow-bottom {
    display: none;
 }
+
+#canvas-modal {
+  background: white;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+  position: fixed;
+  top: 50%;
+  z-index: 1;
+}

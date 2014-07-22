@@ -68,6 +68,25 @@ function getParameterDefinitions() {
   ];
 }
 
+function newCanvas() {
+  var wrapper = document.createElement("div");
+  wrapper.clssName = "canvas-modal";
+  var canvas = document.createElement("canvas");
+  wrapper.appendChild(canvas);
+  canvas.width = 400;
+  canvas.height = 400;
+  ctx = canvas.getContext("2d")
+  function drawTriangle(x,y) {
+    r = 10;
+    ctx.beginPath();
+    ctx.moveTo(x+r*Math.cos(0),y+r*Math.sin(0));
+    ctx.moveTo(x+r*Math.cos(Math.PI*2/3),y+r*Math.sin(Math.PI*2/3));
+    ctx.moveTo(x+r*Math.cos(Math.PI*4/3),y+r*Math.sin(Math.PI*4/3));
+    ctx.stroke();
+  }
+  drawTriangle(100,100);
+  document.querySelector("body").appendChild(wrapper);
+}
 function main(params) {
   _o = {
     separation: 2,
