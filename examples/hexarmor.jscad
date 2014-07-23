@@ -9,7 +9,7 @@ function getParameterDefinitions() {
     { name: 'tri_ro', type: 'float', initial: 12, caption: "Triangle Outer Radius" },
     { name: 'tri_ri', type: 'float', initial: 3.5, caption: "Triangle Inner Radius" },
     { name: 'gap', type: 'float', initial: 0.6, caption: "Gap" },
-    //{ name: 'pattern', type: 'custom', constructor: 'newCanvas', caption: "pattern"}
+    { name: 'pattern', type: 'custom', constructor: 'newCanvas', caption: "pattern"}
   ];
 }
 function torus2(p) {
@@ -68,6 +68,7 @@ function main(params) {
   var unit_cell = get_unit_cell(_d).translate([0,0,_d.hex.h/2]);
   var dist = _d.tri.ro+_d.hex.r-2;
   var _uc = unit_cell.rotateZ(60).translate([-dist,0,]);
+  console.log(params.pattern);
   /*return difference(
     unit_cell,
     cube(100).center(true).translate([0,50,0])

@@ -1211,10 +1211,10 @@ OpenJsCad.Processor.prototype = {
       }
       var control = this.paramControls[i];
       var value = null;
-      if( (type == "text") || (type == "float") || (type == "int") )
+      if( (type == "text") || (type == "float") || (type == "int") || (type == "number") )
       {
         value = control.value;
-        if( (type == "float") || (type == "int") )
+        if( (type == "float") || (type == "int") || (type == "number") )
         {
           var isnumber = !isNaN(parseFloat(value)) && isFinite(value);
           if(!isnumber)
@@ -1234,6 +1234,9 @@ OpenJsCad.Processor.prototype = {
       else if(type == "choice")
       {
         value = control.options[control.selectedIndex].value;
+      }
+      else if(type == "custom") {
+        value = this.paramInstances[paramdef.name].getValue();
       }
       paramValues[paramdef.name] = value;
     }
@@ -1491,6 +1494,7 @@ OpenJsCad.Processor.prototype = {
   createParamControls: function() {
     this.parameterstable.innerHTML = "";
     this.paramControls = [];
+    this.paramInstances = {};
     var paramControls = [];
     var tablerows = [];
     for(var i = 0; i < this.paramDefinitions.length; i++)
@@ -1506,15 +1510,19 @@ OpenJsCad.Processor.prototype = {
       {
         type = paramdef.type;
       }
-      if( (type !== "text") && (type !== "int") && (type !== "float") && (type !== "choice") && (type !== "custom"))
+      var allowed_types = ["text","int","float","choice","number","custom"];
+      if (allowed_types.indexOf(type) == -1)
       {
         throw new Error(errorprefix + "Unknown parameter type '"+type+"'");
       }
       var control;
-      if( (type == "text") || (type == "int") || (type == "float") )
+      if( (type == "text") || (type == "int") || (type == "float") || (type == "number") )
       {
         control = document.createElement("input");
-        control.type = "text";
+        if (type == "number")
+            control.type = "number";
+        else
+            control.type = "text";
         if('default' in paramdef)
         {
           control.value = paramdef["default"];
@@ -1523,7 +1531,7 @@ OpenJsCad.Processor.prototype = {
           control.value = paramdef.initial;
         else
         {
-          if( (type == "int") || (type == "float") )
+          if( (type == "int") || (type == "float") || (type == "number") )
           {
             control.value = "0";
           }
@@ -1534,13 +1542,17 @@ OpenJsCad.Processor.prototype = {
         }
         if(paramdef.size!==undefined) 
            control.size = paramdef.size;
+        for (var property in paramdef)
+            if (paramdef.hasOwnProperty (property))
+                if ((property != "name") && (property != "type") && (property != "default") && (property != "initial") && (property != "caption"))
+                    control.setAttribute (property, paramdef[property]);
       }
       else if(type == "choice")
       {
         if(!('values' in paramdef))
         {
           throw new Error(errorprefix + "Should include a 'values' parameter");
-        }        
+        }
         control = document.createElement("select");
         var values = paramdef.values;
         var captions;
@@ -1581,10 +1593,11 @@ OpenJsCad.Processor.prototype = {
         if(values.length > 0)
         {
           control.selectedIndex = selectedindex;
-        }        
+        }
       }
       else if (type == "custom") {
-        window[paramdef.constructor];
+        this.paramInstances[paramdef.name] = instance = new window[paramdef.constructor](paramdef);
+        control = instance.getControl();
       }
       // implementing instantUpdate
       control.onchange = function() { 
@@ -1601,7 +1614,7 @@ OpenJsCad.Processor.prototype = {
         label = paramdef.caption;
         td.className = 'caption';
       }
-       
+
       td.innerHTML = label;
       tr.appendChild(td);
       td = document.createElement("td");
