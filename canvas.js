@@ -16,14 +16,14 @@ function newCanvas() {
     wrapper.style.display = "none";
     var img = document.createElement("img");
     img.width = "150";
-    img.src = canvas.toValueURL();
-    contorl.innerHTML = "";
+    img.src = canvas.toDataURL();
+    control.innerHTML = "";
     control.appendChild(img);
     control.value = value;
   }
   var button = document.createElement("button");
   button.className = "save";
-  button.innerHTML = "Save and Render";
+  button.innerHTML = "Save and close";
   button.onclick = done;
   content.appendChild(button);
   var margin = 60;
@@ -40,7 +40,10 @@ function newCanvas() {
     }
     value.push(row);
   }
-  value[2][3] = 1;
+  value[2][4] = 1;
+  //value[2][3] = -1;
+  //value[2][2] = 1;
+  //value[3][3] = 1;
 
   function tick(e) {
     // draw grid

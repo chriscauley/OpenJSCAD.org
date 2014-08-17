@@ -2,7 +2,7 @@ function getParameterDefinitions() {
   var _v = ['bottom','lid'];
   return [
     { name: 'hex_r', type: 'float', initial: 29, caption: "Hex Radius" },
-    { name: 'border', type: 'float', initial: 3, caption: "Hex Border" },
+    { name: 'border', type: 'float', initial: 2, caption: "Hex Border" },
     { name: 'hex_h', type: 'float', initial: 9.25, caption: "Hex Height" },
     { name: 'gap', type: 'float', initial: 0.5, caption: "Gap" },
     { name: 'style', type: 'choice', values: _v, initial: 'bottom', caption: "Style" },
@@ -42,13 +42,13 @@ function main(p) {
     [dx/2,-dy,0],
     [0,0,0]
   ];
-  if (p.count == 'one') { shifts = [[0,0,0]]; }
+  if (p.count == 'single') { shifts = [[0,0,0]]; }
   var hexes = [];
   var base = [];
   var skirt = [];
   for (var i=0; i<shifts.length; i++) {
     hexes.push(unit.translate(shifts[i]));
-    base.push(make_hex(p.hex_r+p.border-0.1,p.border).translate(shifts[i]));
+    base.push(make_hex(p.hex_r+p.border-0.3,p.border).translate(shifts[i]));
     skirt.push(make_hex(p.hex_r+p.border*1.5,p.border).translate(shifts[i]));
   }
   base = difference(union(skirt),union(base))
