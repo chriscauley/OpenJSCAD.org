@@ -41,6 +41,7 @@ function newCanvas() {
     value.push(row);
   }
   value[2][4] = 1;
+  value[1][4] = -1;
   //value[2][3] = -1;
   //value[2][2] = 1;
   //value[3][3] = 1;
